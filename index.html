@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Model Viewer AR</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Model Viewer AR Example">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" href="./styles.css" rel="stylesheet"/>
+</head>
+<body>
+    <!-- Model Viewer -->
+    <model-viewer 
+        id="model-viewer"
+        src="relogio.glb" 
+        ios-src="bussola.usdz" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        tone-mapping="neutral" 
+        poster="poster.webp" 
+        shadow-intensity="1" 
+        autoplay>
+        
+        <!-- Barra de progresso -->
+        <div class="progress-bar hide" slot="progress-bar">
+            <div class="update-bar"></div>
+        </div>
+        
+        <!-- Botão de AR para Android e Web -->
+        <button slot="ar-button" id="ar-button">
+            Ver em seu espaço
+        </button>
+        
+        <!-- Mensagem de orientação para AR -->
+        <div id="ar-prompt">
+            <img src="ar_hand_prompt.png">
+        </div>
+    </model-viewer>  
+
+    <!-- Botão de AR para iPhone (Sempre visível) -->
+    <button id="ar-button-ios" onclick="openAR()">Ver no iPhone</button>
+
+    <!-- Script para abrir AR no Safari -->
+    <script>
+        function openAR() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            if (/iPhone|iPad|iPod/.test(userAgent)) {
+                if (userAgent.includes("CriOS")) {
+                    // Chrome no iPhone detectado, mostrar alerta
+                    alert("Para visualizar em AR, abra este link no Safari.");
+                } else {
+                    // Abrir Quick Look (USDZ) no Safari
+                    const arLink = document.createElement('a');
+                    arLink.setAttribute('rel', 'ar');
+                    arLink.setAttribute('href', 'bussola.usdz');
+                    arLink.click();
+                }
+            } else {
+                document.getElementById("model-viewer").activateAR();
+            }
+        }
+    </script>
+
+    <!-- Script principal -->
+    <script src="script.js"></script>
+
+    <!-- Carregando Model Viewer -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</body>
+</html>
